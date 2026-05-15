@@ -48,7 +48,7 @@ public class PostController {
         private String content;
     }
 
-    @PostMapping("/posts/doWrite")
+    @PostMapping("/posts/write")
     @Transactional
     public String write(
             @ModelAttribute("form") @Valid WriteForm form, //@ModelAttribute  가 기본적으로 있는 것. form 다음에 result 순서 바꾸면 안 됨.
