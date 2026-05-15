@@ -25,6 +25,12 @@ import java.util.stream.Collectors;
 public class PostController {
     private final PostService postService;
 
+    @ModelAttribute("siteName")
+    public String siteName() {
+        return "대박 사이트";
+    }
+
+
     @GetMapping("/posts/write")
     // @ResponseBody 리스폰스 바디가 있으면 타임리프가 안 됨.
     public String showWrite(@ModelAttribute("form") WriteForm form) {
