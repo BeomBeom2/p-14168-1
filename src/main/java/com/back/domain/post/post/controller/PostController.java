@@ -40,11 +40,11 @@ public class PostController {
     @AllArgsConstructor
     @Getter
     public static class WriteForm {
-        @NotBlank(message = "1-제목을 입력해주세요.")
-        @Size(min = 2, max = 20, message = "2-제목은 2자 이상, 20자 이하로 입력가능합니다.")
+        @NotBlank(message = "01-title-제목을 입력해주세요.")
+        @Size(min = 2, max = 20, message = "02-title-제목은 2자 이상, 20자 이하로 입력가능합니다.")
         private String title;
-        @NotBlank(message = "3-내용을 입력해주세요.")
-        @Size(min = 2, max = 20, message = "4-내용은 2자 이상, 20자 이하로 입력가능합니다.")
+        @NotBlank(message = "03-content-내용을 입력해주세요.")
+        @Size(min = 2, max = 20, message = "04-content-내용은 2자 이상, 20자 이하로 입력가능합니다.")
         private String content;
     }
 
@@ -56,15 +56,15 @@ public class PostController {
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            String errorFieldName = "title";
-            String errorMessage = bindingResult
-                    .getFieldErrors()
-                    .stream()
-                    .map(fieldError -> (fieldError.getField() + "-" + fieldError.getDefaultMessage()).split("-", 3))
-                    .map(field -> "<!--%s--><li data-error-field-name=\"%s\">%s</li>".formatted(field[1], field[0], field[2]))
-                    .collect(Collectors.joining("\n"));
-
-            model.addAttribute("errorMessage", errorMessage);
+//            String errorFieldName = "title";
+//            String errorMessage = bindingResult
+//                    .getFieldErrors()
+//                    .stream()
+//                    .map(fieldError -> (fieldError.getField() + "-" + fieldError.getDefaultMessage()).split("-", 3))
+//                    .map(field -> "<!--%s--><li data-error-field-name=\"%s\">%s</li>".formatted(field[1], field[0], field[2]))
+//                    .collect(Collectors.joining("\n"));
+//
+//            model.addAttribute("errorMessage", errorMessage);
 
             return "post/post/write";
         }
