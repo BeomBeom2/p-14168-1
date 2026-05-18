@@ -13,11 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -70,6 +68,32 @@ public class PostController {
         }
 
         Post post = postService.write(form.getTitle(), form.getContent());
-        return "redirect:/posts/write";
+        return "redirect:/posts/" + post.getId();
+    }
+
+
+    @GetMapping("/posts/{id}")
+    @Transactional(readOnly = true)
+    public String showDetail(
+            @PathVariable int id,
+            Model model
+    ) {
+        Post post = postService.findById(id).get();
+
+        model.addAttribute("post", post);
+
+        return "post/post/detail";
+    }
+
+    @GetMapping("/posts")
+    @Transactional(readOnly = true)
+    @ResponseBody
+    public List<Post> showList() {
+        return postService.findAll();
+    }
+
+    @GetMapping("/posts/")
+    public String redirectToList() {
+        return "redirect:/posts";
     }
 }
