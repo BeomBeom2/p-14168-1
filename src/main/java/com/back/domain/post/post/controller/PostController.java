@@ -24,25 +24,17 @@ import java.util.stream.Collectors;
 public class PostController {
     private final PostService postService;
 
-    @ModelAttribute("siteName")
-    public String siteName() {
-        return "대박 사이트";
+    record ModifyForm(
+            @NotBlank(message = "01-title-제목을 입력해주세요.")
+            @Size(min = 2, max = 20, message = "02-title-제목은 2자 이상, 20자 이하로 입력가능합니다.")
+            String title,
+            @NotBlank(message = "03-content-내용을 입력해주세요.")
+            @Size(min = 2, max = 20, message = "04-content-내용은 2자 이상, 20자 이하로 입력가능합니다.")
+            String content
+    ) {
     }
 
-
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class ModifyForm {
-        @NotBlank(message = "01-title-제목을 입력해주세요.")
-        @Size(min = 2, max = 20, message = "02-title-제목은 2자 이상, 20자 이하로 입력가능합니다.")
-        private String title;
-        @NotBlank(message = "03-content-내용을 입력해주세요.")
-        @Size(min = 2, max = 20, message = "04-content-내용은 2자 이상, 20자 이하로 입력가능합니다.")
-        private String content;
-    }
-
-    @PostMapping("/posts/{id}/modify")
+    @PutMapping("/posts/{id}/modify")
     @Transactional
     public String modify(
             @PathVariable int id,
@@ -57,7 +49,7 @@ public class PostController {
             return "post/post/modify";
         }
 
-        postService.modify(post, form.getTitle(), form.getContent());
+        postService.modify(post, form.title, form.content);
 
         return "redirect:/posts/" + post.getId();
     }
@@ -72,8 +64,7 @@ public class PostController {
         Post post = postService.findById(id).get();
 
         model.addAttribute("post", post);
-        form.setTitle(post.getTitle());
-        form.setContent(post.getContent());
+        model.addAttribute("form", new ModifyForm(post.getTitle(), post.getContent()));
 
         return "post/post/modify";
     }
@@ -86,23 +77,21 @@ public class PostController {
     }
 
 
-    @AllArgsConstructor
-    @Getter
-    public static class WriteForm {
-        @NotBlank(message = "01-title-제목을 입력해주세요.")
-        @Size(min = 2, max = 20, message = "02-title-제목은 2자 이상, 20자 이하로 입력가능합니다.")
-        private String title;
-        @NotBlank(message = "03-content-내용을 입력해주세요.")
-        @Size(min = 2, max = 20, message = "04-content-내용은 2자 이상, 20자 이하로 입력가능합니다.")
-        private String content;
+    record WriteForm(
+            @NotBlank(message = "01-title-제목을 입력해주세요.")
+            @Size(min = 2, max = 20, message = "02-title-제목은 2자 이상, 20자 이하로 입력가능합니다.")
+            String title,
+            @NotBlank(message = "03-content-내용을 입력해주세요.")
+            @Size(min = 2, max = 20, message = "04-content-내용은 2자 이상, 20자 이하로 입력가능합니다.")
+            String content
+    ) {
     }
 
     @PostMapping("/posts/write")
     @Transactional
     public String write(
             @ModelAttribute("form") @Valid WriteForm form, //@ModelAttribute  가 기본적으로 있는 것. form 다음에 result 순서 바꾸면 안 됨.
-           BindingResult bindingResult,
-            Model model
+            BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
 //            String errorFieldName = "title";
@@ -118,7 +107,7 @@ public class PostController {
             return "post/post/write";
         }
 
-        Post post = postService.write(form.getTitle(), form.getContent());
+        Post post = postService.write(form.title, form.content);
         return "redirect:/posts/" + post.getId();
     }
 
